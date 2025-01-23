@@ -3,6 +3,7 @@ const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const { toJSON, paginate } = require('./plugins');
 const { roles } = require('../config/roles');
+const { required } = require('joi');
 
 const userSchema = mongoose.Schema(
   {
@@ -22,6 +23,29 @@ const userSchema = mongoose.Schema(
           throw new Error('Invalid email');
         }
       },
+    },
+
+    dateOfBirth: {
+      type: Date,
+      required: false,  // Date of birth is optional, but can be made required if needed
+      validate(value) {
+        // If dateOfBirth is provided, validate that it's a valid date
+        if (value && isNaN(Date.parse(value))) {
+          throw new Error('Invalid date format');
+        }
+      },
+    },
+    phone :{
+      type : String,
+      required : true,
+      validate(value) {
+        // The following regex matches a 10-digit phone number (without spaces, dashes, etc.)
+        if (!/^[0-9]{10}$/.test(value)) {
+          throw new Error('Phone number must be exactly 10 digits');
+        }
+      },
+      
+
     },
     password: {
       type: String,
@@ -89,3 +113,7 @@ userSchema.pre('save', async function (next) {
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
+// news.models
+// user service controller
+// curd operations on news 
+// heading ,img,  publish date , description 

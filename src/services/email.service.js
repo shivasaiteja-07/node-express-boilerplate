@@ -54,6 +54,31 @@ To verify your email, click on this link: ${verificationEmailUrl}
 If you did not create an account, then ignore this email.`;
   await sendEmail(to, subject, text);
 };
+const transporter = nodemailer.createTransport({
+
+  host: 'smtp.gmail.com',  // SMTP host for Gmail
+  port: 587,               // Port for TLS
+  secure: false,           // Use TLS
+  auth: {
+    user: 'shivasaiteja002@gmail.com',  // Your Gmail address
+    pass: 'ntds pril ivnv pzbq',         // Your App Password or Gmail password
+  },
+  
+});
+const mailOptions = {
+  from: 'shivasaiteja002@gmail.com',  // Sender's email address
+  to: 'shivasaiteja07@gmail.com', // Recipient's email address
+  subject: 'Test Email from Nodemailer', // Subject of the email
+  text: 'Hello! This is a test email sent using Nodemailer.', // Plain text content
+  html: '<p>Hello! This is a <b>test email</b> sent using <i>Nodemailer</i>.</p>', // HTML content (optional)
+};
+transporter.sendMail(mailOptions, (error, info) => {
+  if (error) {
+    console.log('Error occurred:', error);
+  } else {
+    console.log('Email sent successfully:', info.response);
+  }
+});
 
 module.exports = {
   transport,
