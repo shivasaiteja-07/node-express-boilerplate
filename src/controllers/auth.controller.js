@@ -1,6 +1,75 @@
+
+
 const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
-const { authService, userService, tokenService, emailService } = require('../services');
+const { authService, userService, tokenService, emailService, newsService } = require('../services');
+
+// Existing functions...
+
+// Add the news-related functions here
+
+// Create a news article
+const createNews = catchAsync(async (req, res) => {
+  const { heading, content, author, publishDate } = req.body;  // Assuming these fields for the news article
+  const newsData = { heading, content, author, publishDate };
+
+  // Create the news article
+  const news = await newsService.createNews(newsData);
+
+  res.status(httpStatus.CREATED).send(news);
+});
+
+// Get all news articles
+const getNews = catchAsync(async (req, res) => {
+  const news = await newsService.getNews();
+  res.status(httpStatus.OK).send(news);
+});
+
+// Get a single news article by ID
+const getNewsById = catchAsync(async (req, res) => {
+  const { newsId } = req.params;
+  const news = await newsService.getNewsById(newsId);
+
+  if (!news) {
+    res.status(httpStatus.NOT_FOUND).send({ message: 'News article not found' });
+  } else {
+    res.status(httpStatus.OK).send(news);
+  }
+});
+
+// Update a news article by ID
+const updateNewsById = catchAsync(async (req, res) => {
+  const { newsId } = req.params;
+  const updatedNews = await newsService.updateNewsById(newsId, req.body);
+
+  if (!updatedNews) {
+    res.status(httpStatus.NOT_FOUND).send({ message: 'News article not found' });
+  } else {
+    res.status(httpStatus.OK).send(updatedNews);
+  }
+});
+
+// Delete a news article by ID
+const deleteNewsById = catchAsync(async (req, res) => {
+  const { newsId } = req.params;
+  const deletedNews = await newsService.deleteNewsById(newsId);
+
+  if (!deletedNews) {
+    res.status(httpStatus.NOT_FOUND).send({ message: 'News article not found' });
+  } else {
+    res.status(httpStatus.NO_CONTENT).send();
+  }
+});
+
+module.exports = {
+  // Existing exports...
+  createNews,
+  getNews,
+  getNewsById,
+  updateNewsById,
+  deleteNewsById,
+};
+
 
 const register = catchAsync(async (req, res) => {
   // const user = await userService.createUser(req.body);
